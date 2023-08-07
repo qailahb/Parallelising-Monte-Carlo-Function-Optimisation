@@ -4,9 +4,9 @@
  */
 
 public class Search {
-	private int id;				// Searcher identifier
+	private int id;						// Searcher identifier
 	private int pos_row, pos_col;		// Position in the grid
-	private int steps; //number of steps to end of search
+	private int steps; 					//number of steps to end of search
 	private boolean stopped;			// Did the search hit a previous trail?
 	
 	private TerrainArea terrain;

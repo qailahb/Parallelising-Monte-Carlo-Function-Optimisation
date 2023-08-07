@@ -7,6 +7,8 @@
  * EduHPC'22 Peachy Assignment" 
  * developed by Arturo Gonzalez Escribano  (Universidad de Valladolid 2021/2022)
  */
+
+
 import java.util.Random;
 
 class MonteCarloMinimization{
