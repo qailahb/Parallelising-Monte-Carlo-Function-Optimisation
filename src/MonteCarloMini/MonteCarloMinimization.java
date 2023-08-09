@@ -8,6 +8,7 @@
  * developed by Arturo Gonzalez Escribano  (Universidad de Valladolid 2021/2022)
  */
 
+//Run Command: java -cp .\src\MonteCarloMini\ MonteCarloMinimization 10 10 1 10 1 10 10
 
 import java.util.Random;
 
