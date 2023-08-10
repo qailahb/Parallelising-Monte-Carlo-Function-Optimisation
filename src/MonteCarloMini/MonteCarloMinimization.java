@@ -84,7 +84,7 @@ class MonteCarloMinimization{
     			min=local_min;
     			finder=i; //keep track of who found it
     		}
-    		if(DEBUG) System.out.println("Search "+searches[i].getID()+" finished at  "+local_min + " in " +searches[i].getSteps());
+    		if(DEBUG) System.out.println("Search " + searches[i].getID()+" finished at  "+local_min + " in " +searches[i].getSteps());
     	}
    		//end timer
    		tock();
