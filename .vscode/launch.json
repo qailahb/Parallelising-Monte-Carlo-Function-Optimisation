@@ -15,14 +15,16 @@
             "name": "MonteCarloMinimization",
             "request": "launch",
             "mainClass": "MonteCarloMinimization",
-            "projectName": "ParallelAssignment2023_1b54297a"
+            "projectName": "ParallelAssignment2023_1b54297a",  
+            "args": "10 10 1 10 1 10 10"
         },
         {
             "type": "java",
             "name": "MonteCarloMinimizationParallel",
             "request": "launch",
             "mainClass": "MonteCarloMinimizationParallel",
-            "projectName": "ParallelAssignment2023_1b54297a"
+            "projectName": "ParallelAssignment2023_1b54297a",
+            "args": "10 10 1 10 1 10 10"
         }
     ]
 }
