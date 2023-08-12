@@ -12,6 +12,11 @@ import java.util.concurrent.ForkJoinPool;
 
 public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
 
+    private int startRow;
+    private int endRow;
+
+    private static final int THRESHOLD = 100;
+
     static final boolean DEBUG=false;
 	
 	static long startTime = 0;
@@ -34,8 +39,11 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
     SearchParallel [] searches;
     private Random rand = new Random();
 
-    public MonteCarloMinimizationParallel(int rows, int columns, double xmin, double xmax, double ymin, double ymax,
+    public MonteCarloMinimizationParallel(int startRow, int endRow, int columns, double xmin, double xmax, double ymin, double ymax,
                                           double searchesDensity) {
+        
+        this.startRow = startRow;
+        this.endRow = endRow;                                    
         this.rows = rows;
         this.columns = columns;
         this.xmin = xmin;
@@ -43,39 +51,39 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
         this.ymin = ymin;
         this.ymax = ymax;
         this.searchesDensity = searchesDensity;
-        this.numSearches = (int)(rows * columns * searchesDensity);
-        this.terrain = new TerrainArea(rows, columns, xmin, xmax, ymin, ymax);
+        this.numSearches = (int)((endRow-startRow+1)*rows * columns * searchesDensity);
+        this.terrain = new TerrainArea(endRow-startRow+1, columns, xmin, xmax, ymin, ymax);
         searches = new SearchParallel[numSearches];
     }
 
 
     @Override
-    protected Integer compute() {
-
+protected Integer compute() {
+    if (endRow - startRow <= THRESHOLD) {
         int min = Integer.MAX_VALUE;
-
-        
-            // For larger numbers of searches, divide the task into sub-tasks
-            MonteCarloMinimizationParallel[] subTasks = new MonteCarloMinimizationParallel[10];
-
-            for (int i = 0; i < 10; i++) {
-                subTasks[i] = new MonteCarloMinimizationParallel(rows, columns, xmin, xmax, ymin, ymax, searchesDensity);
+        for (int i = startRow; i < endRow; i++) {
+            SearchParallel search = new SearchParallel(i+1, rand.nextInt(rows),rand.nextInt(columns),terrain); // Replace id and pos_col with appropriate values
+            int localMin = search.compute();
+            if (localMin < min) {
+                min = localMin;
             }
-
-            invokeAll(subTasks);
-
-            for (int i = 0; i < 10; i++) {
-                int localMin = subTasks[i].join();
-                int finder = -1;
-                if (localMin < min) {
-                    min = localMin;
-                    finder = i;
-                }
-                if(DEBUG) System.out.println("Search " + searches[i].getID()+" finished at  "+ localMin + " in " +searches[i].getSteps());
-            }  
-            
+        }
         return min;
+    } else {
+        int mid = (startRow + endRow) / 2;
+        MonteCarloMinimizationParallel leftTask = new MonteCarloMinimizationParallel(startRow, mid, columns, xmin, xmax, ymin, ymax, searchesDensity);
+        MonteCarloMinimizationParallel rightTask = new MonteCarloMinimizationParallel(mid, endRow, columns, xmin, xmax, ymin, ymax, searchesDensity);
+
+        leftTask.fork();
+        int rightResult = rightTask.compute();
+        int leftResult = leftTask.join();
+
+        return Math.min(leftResult, rightResult);
     }
+}
+
+
+    
 
     public static void main(String[] args) {
 
@@ -104,7 +112,7 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
     		System.out.printf("\n");
     	}
 
-        MonteCarloMinimizationParallel parallelMC = new MonteCarloMinimizationParallel(rows, columns, xmin, xmax, ymin, ymax, searchesDensity);
+        MonteCarloMinimizationParallel parallelMC = new MonteCarloMinimizationParallel(0, rows - 1, columns, xmin, xmax, ymin, ymax, searchesDensity);
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         int min = forkJoinPool.invoke(parallelMC);
 
