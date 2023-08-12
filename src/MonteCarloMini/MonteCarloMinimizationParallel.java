@@ -52,9 +52,6 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
 
-        //start timer
-    	tick();
-
         int min = Integer.MAX_VALUE;
 
         
@@ -76,14 +73,15 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
                 }
                 if(DEBUG) System.out.println("Search " + searches[i].getID()+" finished at  "+ localMin + " in " +searches[i].getSteps());
             }  
-
-        //end timer
-   		tock();
             
         return min;
     }
 
     public static void main(String[] args) {
+
+        //start timer
+    	tick();
+
         if (args.length != 7) {
             System.out.println("Incorrect number of command line arguments provided.");
             //System.out.println("Usage: java MonteCarloMinimizationParallel rows columns xmin xmax ymin ymax searches_density");
@@ -109,6 +107,9 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
         MonteCarloMinimizationParallel parallelMC = new MonteCarloMinimizationParallel(rows, columns, xmin, xmax, ymin, ymax, searchesDensity);
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         int min = forkJoinPool.invoke(parallelMC);
+
+        //end timer
+   		tock();
 
         if(DEBUG) {
     		/* print final state */
