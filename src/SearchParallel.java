@@ -37,7 +37,7 @@ public class SearchParallel extends RecursiveTask<Integer> {
     }
         public int find_valleys() {
         int height = Integer.MAX_VALUE;
-        SearchParallel.Direction next = SearchParallel.Direction.STAY_HERE;
+        Direction next = Direction.STAY_HERE;
 
         while (terrain.visited(pos_row, pos_col) == 0) { // stop when hitting an existing path
             height = terrain.get_height(pos_row, pos_col);

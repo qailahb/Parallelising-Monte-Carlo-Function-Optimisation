@@ -1,30 +1,30 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "MonteCarloMinimization",
-            "request": "launch",
-            "mainClass": "MonteCarloMinimization",
-            "projectName": "ParallelAssignment2023_1b54297a",  
-            "args": "3000 3000 0 3000 0 3000 0.5"
-        },
-        {
-            "type": "java",
-            "name": "MonteCarloMinimizationParallel",
-            "request": "launch",
-            "mainClass": "MonteCarloMinimizationParallel",
-            "projectName": "ParallelAssignment2023_1b54297a",
-            "args": "1000 1000 0 1000 0 1000 0.5"
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Current File",
+      "request": "launch",
+      "mainClass": "${file}"
+    },
+    {
+      "type": "java",
+      "name": "MonteCarloMinimization",
+      "request": "launch",
+      "mainClass": "MonteCarloMinimization",
+      "projectName": "ParallelAssignment2023_2ecef37e",
+      "args": "100 100 1 100 1 100 0.5"
+    },
+    {
+      "type": "java",
+      "name": "MonteCarloMinimizationParallel",
+      "request": "launch",
+      "mainClass": "MonteCarloMinimizationParallel",
+      "projectName": "ParallelAssignment2023_2ecef37e",
+      "args": "100 100 1 100 1 100 0.5"
+    }
+  ]
 }
