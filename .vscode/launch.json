@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "MonteCarloMinimization",
+      "request": "launch",
+      "mainClass": "MonteCarloMinimization",
+      "projectName": "ParallelAssignment2023_1b54297a"
+    },
+    {
+      "type": "java",
       "name": "Current File",
       "request": "launch",
       "mainClass": "${file}"
