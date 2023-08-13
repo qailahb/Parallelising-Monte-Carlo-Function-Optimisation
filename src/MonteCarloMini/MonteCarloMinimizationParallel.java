@@ -36,10 +36,14 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
     private double searchesDensity; // number of searches per grid point
 
     private static int numSearches; // total number of searches to be performed
-    SearchParallel [] searches;
+    //SearchParallel [] searches;
     private Random rand = new Random();
 
-    public MonteCarloMinimizationParallel(int startRow, int endRow, int columns, double xmin, double xmax, double ymin, double ymax,
+    private static int finder;
+    private static double x_coord;
+    private static double y_coord;
+
+    public MonteCarloMinimizationParallel(int startRow, int endRow, int rows, int columns, double xmin, double xmax, double ymin, double ymax,
                                           double searchesDensity) {
         
         this.startRow = startRow;
@@ -51,9 +55,9 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
         this.ymin = ymin;
         this.ymax = ymax;
         this.searchesDensity = searchesDensity;
-        this.numSearches = (int)((endRow-startRow+1)*rows * columns * searchesDensity);
-        this.terrain = new TerrainArea(endRow-startRow+1, columns, xmin, xmax, ymin, ymax);
-        searches = new SearchParallel[numSearches];
+        MonteCarloMinimizationParallel.numSearches = (int)((endRow-startRow+1) * columns * searchesDensity);
+        //this.terrain = new TerrainArea(endRow-startRow+1, columns, xmin, xmax, ymin, ymax);
+        //searches = new SearchParallel[numSearches];
     }
 
 
@@ -66,13 +70,18 @@ protected Integer compute() {
             int localMin = search.compute();
             if (localMin < min) {
                 min = localMin;
+                finder=i;
+                x_coord = terrain.getXcoord(search.getPos_row());
+                y_coord = terrain.getYcoord(search.getPos_col());
             }
         }
         return min;
-    } else {
+    } 
+    
+    else {
         int mid = (startRow + endRow) / 2;
-        MonteCarloMinimizationParallel leftTask = new MonteCarloMinimizationParallel(startRow, mid, columns, xmin, xmax, ymin, ymax, searchesDensity);
-        MonteCarloMinimizationParallel rightTask = new MonteCarloMinimizationParallel(mid, endRow, columns, xmin, xmax, ymin, ymax, searchesDensity);
+        MonteCarloMinimizationParallel leftTask = new MonteCarloMinimizationParallel(startRow, mid, rows, columns, xmin, xmax, ymin, ymax, searchesDensity);
+        MonteCarloMinimizationParallel rightTask = new MonteCarloMinimizationParallel(mid, endRow, rows, columns, xmin, xmax, ymin, ymax, searchesDensity);
 
         leftTask.fork();
         int rightResult = rightTask.compute();
@@ -112,7 +121,8 @@ protected Integer compute() {
     		System.out.printf("\n");
     	}
 
-        MonteCarloMinimizationParallel parallelMC = new MonteCarloMinimizationParallel(0, rows - 1, columns, xmin, xmax, ymin, ymax, searchesDensity);
+        MonteCarloMinimizationParallel parallelMC = new MonteCarloMinimizationParallel(0, rows - 1, rows, columns, xmin, xmax, ymin, ymax, searchesDensity);
+        MonteCarloMinimizationParallel.terrain = new TerrainArea(rows, columns, xmin, xmax, ymin, ymax);
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         int min = forkJoinPool.invoke(parallelMC);
 
@@ -128,7 +138,7 @@ protected Integer compute() {
         System.out.printf("Run parameters\n");
 		System.out.printf("\t Rows: %d, Columns: %d\n", rows, columns);
 		System.out.printf("\t x: [%f, %f], y: [%f, %f]\n", xmin, xmax, ymin, ymax );
-		System.out.printf("\t Search density: %f (%d searches)\n", searchesDensity,numSearches );
+		System.out.printf("\t Search density: %f (%d searches)\n", searchesDensity, numSearches );
 
 		/*  Total computation time */
 		System.out.printf("Time: %d ms\n",endTime - startTime );
@@ -137,6 +147,8 @@ protected Integer compute() {
 		tmp=terrain.getGrid_points_evaluated();
 		System.out.printf("Grid points evaluated: %d  (%2.0f%s)\n",tmp,(tmp/(rows*columns*1.0))*100.0, "%");
 
-        System.out.println("Global minimum: " + min);
+        //System.out.println("Global minimum: " + min);
+        System.out.printf("Global minimum: %d at x=%.1f y=%.1f\n\n", min, x_coord, y_coord );
+
     }
 }

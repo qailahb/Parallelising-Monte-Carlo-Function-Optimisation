@@ -9,6 +9,14 @@ public class SearchParallel extends RecursiveTask<Integer> {
 
     private TerrainArea terrain;
 
+	public enum Direction {
+		STAY_HERE,
+	    LEFT,
+	    RIGHT,
+	    UP,
+	    DOWN
+	  }
+
     public SearchParallel(int id, int pos_row, int pos_col, TerrainArea terrain) {
         this.id = id;
         this.pos_row = pos_row; // randomly allocated
@@ -19,16 +27,18 @@ public class SearchParallel extends RecursiveTask<Integer> {
 
     @Override
     protected Integer compute() {
-        // Perform the Monte Carlo search here
+        return find_valleys();
+    }
+        public int find_valleys() {
         int height = Integer.MAX_VALUE;
-        Search.Direction next = Search.Direction.STAY_HERE;
+        SearchParallel.Direction next = SearchParallel.Direction.STAY_HERE;
 
         while (terrain.visited(pos_row, pos_col) == 0) { // stop when hitting an existing path
             height = terrain.get_height(pos_row, pos_col);
             terrain.mark_visited(pos_row, pos_col, id); // mark current position as visited
             steps++;
 
-            next = terrain.next_step(pos_row, pos_col);
+            next = terrain.next_steps(pos_row, pos_col);
             switch (next) {
                 case STAY_HERE:
                     return height; // found a local valley

@@ -101,6 +101,43 @@ public class TerrainArea {
 		return climb_direction;
 	}
 	
+	//new class
+	SearchParallel.Direction next_steps( int x, int y) {
+		SearchParallel.Direction climb_direction = SearchParallel.Direction.STAY_HERE;
+		int height;
+		int local_min= get_height(x, y);
+		if ( x > 0 ) {
+			height=get_height(x-1, y);
+			if (height<local_min) {
+				local_min=height;
+				climb_direction = SearchParallel.Direction.LEFT;
+			}
+		}
+		if ( x < (rows-1) ) {
+			height=get_height(x+1, y);
+			if (height<local_min) {
+				local_min=height;
+				climb_direction = SearchParallel.Direction.RIGHT;
+			}
+		}
+		if ( y > 0 ) {
+			height=get_height(x, y-1);
+			if (height<local_min) {
+				local_min=height;
+				climb_direction = SearchParallel.Direction.UP;
+			}
+		}
+		if ( y < (columns-1) ) {
+			height=get_height(x, y+1);
+			if (height<local_min) {
+				local_min=height;
+				climb_direction = SearchParallel.Direction.DOWN;
+			}
+		}
+		return climb_direction;
+	}
+
+
 	//display the heights in text format
 	void print_heights( ) {
 		int i,j;
