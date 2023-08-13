@@ -1,3 +1,9 @@
+/* BHMQAI001
+ * Adapted from code belonging to M. Kuttel 2023
+ * Searcher class that lands somewhere random on the surfaces and 
+ * then moves downhill, stopping at the local minimum.
+ */
+
 import java.util.concurrent.RecursiveTask;
 
 public class SearchParallel extends RecursiveTask<Integer> {

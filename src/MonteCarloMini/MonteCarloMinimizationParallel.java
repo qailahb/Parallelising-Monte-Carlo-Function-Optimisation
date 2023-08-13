@@ -1,4 +1,5 @@
 /*
+ * BHMQAI001
  * Parallel program using Monte Carlo method
  * Adatpted from code belonging to Michelle Kuttel 2023, University of Cape Town
  * Adapted from "Hill Climbing with Montecarlo"
@@ -15,14 +16,16 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
     private int startRow;
     private int endRow;
 
-    private static final int THRESHOLD = 100;
+    // Set size of subtasks
+    private static final int THRESHOLD = 1;
 
     static final boolean DEBUG=false;
 	
+    // Initialize variables to store the starting and ending times
 	static long startTime = 0;
 	static long endTime = 0;
 
-	//timers - note milliseconds
+	// Timers - note milliseconds
 	private static void tick() {
 		startTime = System.currentTimeMillis();
 	}
@@ -30,22 +33,21 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
 		endTime=System.currentTimeMillis(); 
 	}
 
-    private int rows, columns; // grid size
-    private double xmin, xmax, ymin, ymax; // x and y terrain limits
+    private int rows, columns;              // Grid size
+    private double xmin, xmax, ymin, ymax;  // x and y terrain limits
     private static TerrainArea terrain;
-    private double searchesDensity; // number of searches per grid point
+    private double searchesDensity;         // Number of searches per grid point
 
-    private static int numSearches; // total number of searches to be performed
+    private static int numSearches;         // Total number of searches to be performed
     //SearchParallel [] searches;
-    private Random rand = new Random();
+    private Random rand = new Random();     // The random number generator
 
     private static int finder;
-    private static double x_coord;
-    private static double y_coord;
+    private static double x_coord;          // x coordinate
+    private static double y_coord;          // y coordinate
 
     public MonteCarloMinimizationParallel(int startRow, int endRow, int rows, int columns, double xmin, double xmax, double ymin, double ymax,
                                           double searchesDensity) {
-        
         this.startRow = startRow;
         this.endRow = endRow;                                    
         this.rows = rows;
@@ -60,13 +62,14 @@ public class MonteCarloMinimizationParallel extends RecursiveTask<Integer> {
         //searches = new SearchParallel[numSearches];
     }
 
-
+    // Parallel implementation
+    // Computes the local minimum in the specified range of rows
     @Override
 protected Integer compute() {
     if (endRow - startRow <= THRESHOLD) {
         int min = Integer.MAX_VALUE;
         for (int i = startRow; i < endRow; i++) {
-            SearchParallel search = new SearchParallel(i+1, rand.nextInt(rows),rand.nextInt(columns),terrain); // Replace id and pos_col with appropriate values
+            SearchParallel search = new SearchParallel(i+1, rand.nextInt(rows),rand.nextInt(columns),terrain); 
             int localMin = search.compute();
             if (localMin < min) {
                 min = localMin;
@@ -79,20 +82,23 @@ protected Integer compute() {
     } 
     
     else {
+        // Calculate the midpoint between startRow and endRow
         int mid = (startRow + endRow) / 2;
+        // Creates new tasks for each half of range
         MonteCarloMinimizationParallel leftTask = new MonteCarloMinimizationParallel(startRow, mid, rows, columns, xmin, xmax, ymin, ymax, searchesDensity);
         MonteCarloMinimizationParallel rightTask = new MonteCarloMinimizationParallel(mid, endRow, rows, columns, xmin, xmax, ymin, ymax, searchesDensity);
 
+        // Initiating parallel execution of left and right tasks
         leftTask.fork();
+
         int rightResult = rightTask.compute();
         int leftResult = leftTask.join();
 
+        // Return the minimum of the results from left and right tasks
         return Math.min(leftResult, rightResult);
     }
 }
 
-
-    
 
     public static void main(String[] args) {
 
@@ -101,9 +107,9 @@ protected Integer compute() {
 
         if (args.length != 7) {
             System.out.println("Incorrect number of command line arguments provided.");
-            //System.out.println("Usage: java MonteCarloMinimizationParallel rows columns xmin xmax ymin ymax searches_density");
             System.exit(0);
         }
+
         /* Read argument values */
         int rows    = Integer.parseInt(args[0]);
         int columns = Integer.parseInt(args[1]);
@@ -121,6 +127,7 @@ protected Integer compute() {
     		System.out.printf("\n");
     	}
 
+        // Initialize optimization and perform parallel Monte Carlo search
         MonteCarloMinimizationParallel parallelMC = new MonteCarloMinimizationParallel(0, rows - 1, rows, columns, xmin, xmax, ymin, ymax, searchesDensity);
         MonteCarloMinimizationParallel.terrain = new TerrainArea(rows, columns, xmin, xmax, ymin, ymax);
         ForkJoinPool forkJoinPool = new ForkJoinPool();

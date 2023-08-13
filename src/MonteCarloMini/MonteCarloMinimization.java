@@ -8,17 +8,16 @@
  * developed by Arturo Gonzalez Escribano  (Universidad de Valladolid 2021/2022)
  */
 
-//Run Command: java -cp .\src\MonteCarloMini\ MonteCarloMinimization 10 10 1 10 1 10 10
-
 import java.util.Random;
 
 class MonteCarloMinimization{
+
 	static final boolean DEBUG=false;
 	
 	static long startTime = 0;
 	static long endTime = 0;
 
-	//timers - note milliseconds
+	// Timers - note milliseconds
 	private static void tick(){
 		startTime = System.currentTimeMillis();
 	}
@@ -28,14 +27,14 @@ class MonteCarloMinimization{
 	
     public static void main(String[] args)  {
 
-    	int rows, columns; //grid size
-    	double xmin, xmax, ymin, ymax; //x and y terrain limits
-    	TerrainArea terrain;  //object to store the heights and grid points visited by searches
-    	double searches_density;	// Density - number of Monte Carlo  searches per grid position - usually less than 1!
+    	int rows, columns; 				// Grid size
+    	double xmin, xmax, ymin, ymax; 	// x and y terrain limits
+    	TerrainArea terrain;  			// Object to store the heights and grid points visited by searches
+    	double searches_density;		// Density - number of Monte Carlo  searches per grid position - usually less than 1!
 
-     	int num_searches;		// Number of searches
-    	Search [] searches;		// Array of searches
-    	Random rand = new Random();  //the random number generator
+     	int num_searches;				// Number of searches
+    	Search [] searches;				// Array of searches
+    	Random rand = new Random();  	// The random number generator
     	
     	if (args.length!=7) {  
     		System.out.println("Incorrect number of command line arguments provided.");   	

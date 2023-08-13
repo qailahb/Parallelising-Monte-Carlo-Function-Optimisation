@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "MonteCarloMinimization",
             "projectName": "ParallelAssignment2023_1b54297a",  
-            "args": "500 500 0 500 0 500 0.5"
+            "args": "3000 3000 0 3000 0 3000 0.5"
         },
         {
             "type": "java",
@@ -24,7 +24,7 @@
             "request": "launch",
             "mainClass": "MonteCarloMinimizationParallel",
             "projectName": "ParallelAssignment2023_1b54297a",
-            "args": "500 500 0 500 0 500 0.5"
+            "args": "1000 1000 0 1000 0 1000 0.5"
         }
     ]
 }
